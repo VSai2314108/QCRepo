@@ -16,7 +16,7 @@ class SVIX10(AlphaQM):
         symbols = [
             "SHV", "TLT", "HYG", "GLD", "UUP"
         ]
-        indicators = [(CumulativeReturnQM, 90), (CumulativeReturnQM, 120)]
+        indicators = [(CumulativeReturnQM, 9000), (CumulativeReturnQM, 120)]
         AlphaQM.__init__(self, customAlgo, (14,4,10,-10), symbols, indicators)
 
     def calculate(self):
