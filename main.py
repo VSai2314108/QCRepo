@@ -22,7 +22,7 @@ class ManagementAlgorithm(QCAlgorithm):
         ############# ADD ALPHA MODELS AND NECESSARY PARAMETERS ###############
 
         self.alpha_models: list[AlphaQM] = []
-        # self.alpha_models.append(SVIX10(self))
+        self.alpha_models.append(SVIX10(self))
         self.alpha_models.append(NeoBetaBaller(self, (14,14,5,-5)))
         self.alpha_models.append(BullOrHedge(self))
         self.insight_list: list[Insight] = []
@@ -38,13 +38,12 @@ class ManagementAlgorithm(QCAlgorithm):
         self.symbols.append("SPY")
         indicators_needed: list[(QM, int)] = list({indicator for model in self.alpha_models for indicator in model.indicators})
 
-        symbols = [
-            "SPY", "BTAL", "FNGD", "FNGU", "PDBC", "SGOV", "SOXL", "SOXS", "SPLV", "SPXU", "SQQQ", "SVXY", "TECL", "TECS", "TLT", "TMV", "TQQQ", "UQL", "UUP", "UVXY", "VIXM", "UPRO", "UDOW", "BIL", "TMF", "PSQ", "IEF", "UGL"
-        ]
-        for symbol in symbols:
-            self.symbols.append(symbol)
+        # symbols = [
+        #     "SPY", "BTAL", "FNGD", "FNGU", "PDBC", "SGOV", "SOXL", "SOXS", "SPLV", "SPXU", "SQQQ", "SVXY", "TECL", "TECS", "TLT", "TMV", "TQQQ", "UQL", "UUP", "UVXY", "VIXM", "UPRO", "UDOW", "BIL", "TMF", "PSQ", "IEF", "UGL"
+        # ]
+        # for symbol in symbols:
+        #     self.symbols.append(symbol)
             
-
         
         ############# CREATE NECESSARY INDICATORS AND STORAGE UNITS ###############
         self.indicators = {symbol:{} for symbol in self.symbols}
@@ -52,12 +51,11 @@ class ManagementAlgorithm(QCAlgorithm):
         # indicators_needed: list[(QM, int)] = []
         # indicators_needed.append((RelativeStrengthIndexQM, 10))
         for symbol in self.symbols:
-            self.indicators[symbol]["CurrentPrice"] = Identity(symbol)
             self.add_equity(symbol, Resolution.DAILY)
-            self.AddEquity(symbol, Resolution.Daily)
-            self.RegisterIndicator(symbol, self.indicators[symbol]["CurrentPrice"], Resolution.Daily)
-
             
+            self.indicators[symbol]["CurrentPrice"] = Identity(symbol)
+            self.register_indicator(symbol, self.indicators[symbol]["CurrentPrice"], Resolution.DAILY)
+
             # each sub dict will have - consolidator, RSI, tempClose
             self.indicators[symbol]["consolidator"] = ShorterDayConsolidator()
             self.indicators[symbol]["consolidator"].data_consolidated += self._consolidation_handler

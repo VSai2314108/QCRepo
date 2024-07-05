@@ -19,7 +19,7 @@ class BullOrHedge(AlphaQM):
             (CumulativeReturnQM, 5), (CumulativeReturnQM, 1),
             (ExponentialMovingAverageQM, 200), (MovingAverageQM, 20)
         ]
-        AlphaQM.__init__(self, customAlgo, (14, 4, 10, -10), symbols, indicators)
+        AlphaQM.__init__(self, customAlgo, (14, 4, 10, -10), symbols, indicators, True)
 
     def calculate(self):
         # Get indicator values
