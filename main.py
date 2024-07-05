@@ -14,7 +14,7 @@ class ManagementAlgorithm(QCAlgorithm):
     def initialize(self):
         ############ SET BACKTEST PARAMETERS ##############
         self.starting_value = 100000
-        self.set_start_date(2021, 4, 20)  # Set Start Date
+        self.set_start_date(2022, 4, 20)  # Set Start Date
         self.set_end_date(2024, 6, 20)    # Set End Date
         self.set_cash(self.starting_value)  
         # self.set_brokerage_model(BrokerageName.DEFAULT, AccountType.CASH)
