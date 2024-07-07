@@ -5,7 +5,7 @@ from QuantConnect.Algorithm.Framework.Alphas import Insight
 from QuantConnect.Data import Slice
 
 from AlphaQM import AlphaQM
-from FullProjectMB.utils.indicators.CumulativeReturnQM import CumulativeReturnQM
+from utils.indicators.CumulativeReturnQM import CumulativeReturnQM
 from utils.indicators.VolatilityQM import VolatilityQM
 
 # from main import ManagementAlgorithm
