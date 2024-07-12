@@ -19,8 +19,6 @@ class BullOrHedge(AlphaQM):
         AlphaQM.__init__(self, customAlgo, (14, 4, 10, -10), symbols, indicators, True)
         
     def calculate(self):
-        # Declaring variables
-        
         ### PRICE ###
         spy_price_0 = self.customAlgo.indicators["SPY"]["tempBar"].Close
         spxl_price_0 = self.customAlgo.indicators["SPXL"]["tempBar"].Close
