@@ -7,6 +7,7 @@ from utils.indicators.QMParent import QM
 
 from alphas.SVIX10 import SVIX10
 from alphas.NeoBetaBaller import NeoBetaBaller
+from alphas.BullOrHedge import BullOrHedge
 from alphas.AlphaQM import AlphaQM
 
 class ManagementAlgorithm(QCAlgorithm):
@@ -21,16 +22,28 @@ class ManagementAlgorithm(QCAlgorithm):
         ############# ADD ALPHA MODELS AND NECESSARY PARAMETERS ###############
 
         self.alpha_models: list[AlphaQM] = []
-        # self.alpha_models.append(SVIX10(self))
+        self.alpha_models.append(SVIX10(self))
         self.alpha_models.append(NeoBetaBaller(self, (14,14,5,-5)))
+        self.alpha_models.append(BullOrHedge(self))
         self.insight_list: list[Insight] = []
-        self.weights: dict[str, float] = {"SVIX10": 0, "NeoBetaBaller": 1}
+        self.weights: dict[str, float] = {
+            "SVIX10": 0, 
+            "NeoBetaBaller": 0, 
+            "BullOrHedge": 1,
+            # Add any other strategies here with default weights
+        }
         
         ############ SET UNIVERSE OF SYMBOLS AND INDICATORS##############
         self.symbols = list(set([symbol for model in self.alpha_models for symbol in model.symbols]))
         self.symbols.append("SPY")
         indicators_needed: list[(QM, int)] = list({indicator for model in self.alpha_models for indicator in model.indicators})
 
+        # symbols = [
+        #     "SPY", "BTAL", "FNGD", "FNGU", "PDBC", "SGOV", "SOXL", "SOXS", "SPLV", "SPXU", "SQQQ", "SVXY", "TECL", "TECS", "TLT", "TMV", "TQQQ", "UQL", "UUP", "UVXY", "VIXM", "UPRO", "UDOW", "BIL", "TMF", "PSQ", "IEF", "UGL"
+        # ]
+        # for symbol in symbols:
+        #     self.symbols.append(symbol)
+            
         
         ############# CREATE NECESSARY INDICATORS AND STORAGE UNITS ###############
         self.indicators = {symbol:{} for symbol in self.symbols}
@@ -40,6 +53,9 @@ class ManagementAlgorithm(QCAlgorithm):
         for symbol in self.symbols:
             self.add_equity(symbol, Resolution.DAILY)
             
+            self.indicators[symbol]["CurrentPrice"] = Identity(symbol)
+            self.register_indicator(symbol, self.indicators[symbol]["CurrentPrice"], Resolution.DAILY)
+
             # each sub dict will have - consolidator, RSI, tempClose
             self.indicators[symbol]["consolidator"] = ShorterDayConsolidator()
             self.indicators[symbol]["consolidator"].data_consolidated += self._consolidation_handler
@@ -91,9 +107,9 @@ class ManagementAlgorithm(QCAlgorithm):
         for insight in self.insight_list:
             symbol, weight, dir, strat = insight.symbol.__str__(), insight.weight, 1 if insight.direction == InsightDirection.UP else (0 if insight.direction == InsightDirection.FLAT else -1), insight.tag
             if symbol in allocations:
-                allocations[symbol] = allocations[symbol]+(weight*self.weights[strat]*dir)
+                allocations[symbol] = allocations[symbol] + (weight * self.weights.get(strat, 0) * dir)
             else:
-                allocations[symbol] = (weight*self.weights[strat]*dir)
+                allocations[symbol] = (weight * self.weights.get(strat, 0) * dir)
         
         port: list[PortfolioTarget] = []
         for symbol, allocation in allocations.items():
