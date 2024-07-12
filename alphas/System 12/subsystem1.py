@@ -23,7 +23,6 @@ class BullOrHedge(AlphaQM):
         spy_price_0 = self.customAlgo.indicators["SPY"]["tempBar"].Close
         spxl_price_0 = self.customAlgo.indicators["SPXL"]["tempBar"].Close
         
-        
         ### INDICATORS ###
         spy_price_200 = self.customAlgo.indicators["SPY"]["MovingAverageQM_200"].temp_value
         spxu_rsi_10 = self.customAlgo.indicators["SPXU"]["RelativeStrengthIndexQM_10"].temp_value
