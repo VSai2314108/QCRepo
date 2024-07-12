@@ -22,7 +22,7 @@ class GoldenRotator(AlphaQM):
             (VolatilityQM, 10), (CumulativeReturnQM, 10), (RelativeStrengthIndexQM, 10),
             (VolatilityQM, 15), (CumulativeReturnQM, 15), (RelativeStrengthIndexQM, 15)
         ]
-        AlphaQM.__init__(self, customAlgo, slope_params, symbols, indicators)
+        AlphaQM.__init__(self, customAlgo, (14, 4, 10, -10), symbols, indicators, True)
 
     def calculate(self):
         # Volmageddon I check
