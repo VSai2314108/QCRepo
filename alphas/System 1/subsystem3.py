@@ -8,7 +8,7 @@ from utils.indicators.MovingAverageQM import MovingAverageQM
 from utils.indicators.VolatilityQM import VolatilityQM
 from datetime import datetime
 
-class UncorrelatedBonds(AlphaQM):
+class UncorrelatedBonds3(AlphaQM):
     def __init__(self, customAlgo: QCAlgorithm) -> None:
         symbols = [
             "SPY", "IEF", "BIL", "SVXY", "TQQQ", "TECL", "UPRO", "SQQQ", "SOXS", "TECS", "UVXY", "TLT", "BND", "PSQ", "QQQ", "VIXY", "SHY", "GLD", "XLP", "BTAL", "SHV", "TMF", "VIXM", "SOXL", "TMV"
