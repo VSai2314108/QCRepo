@@ -45,6 +45,7 @@ class UncorrelatedBonds(AlphaQM):
         tecl_rsi = self.customAlgo.indicators["TECL"]["RelativeStrengthIndexQM_10"].temp_value
         upro_rsi = self.customAlgo.indicators["UPRO"]["RelativeStrengthIndexQM_10"].temp_value
 
+        ######## (VJ) NOT HANDLING THE 100 66 33 ALLOCATION properely ######## - should be an or statement with the three conditions and determine the allocation based on the conditions met
         if tqqq_rsi > 82.0 and tecl_rsi > 80.0 and upro_rsi > 78.0:
             return self.handle_overbought_condition()
         
@@ -53,10 +54,13 @@ class UncorrelatedBonds(AlphaQM):
         qqq_vol = self.customAlgo.indicators["QQQ"]["VolatilityQM_10"].temp_value
         spy_vol = self.customAlgo.indicators["SPY"]["VolatilityQM_5"].temp_value
 
+        ######## (VJ) NOT HANDLING THE 100 66 33 ALLOCATION properely ######## - should be an or statement with the three conditions and determine the allocation based on the conditions met
         if vixm_rsi > 70.0 and qqq_vol > 3.0 and spy_vol > 2.5:
             return self.handle_vixm_condition()
         
-        # Bulls conditions
+        ##### (VJ) Missing SHV allocations here ######
+        
+        # Bulls conditions ######## (VJ) this is correct but try to add a comment when u flip the signs ########
         if self.customAlgo.indicators["QQQ"]["MaxDrawdownQM_10"].temp_value <= 6.0 and \
            self.customAlgo.indicators["TLT"]["MaxDrawdownQM_10"].temp_value <= 3.0:
             return self.allocate([("TMF", 1/3), ("TQQQ", 1/3), ("UPRO", 1/3)])

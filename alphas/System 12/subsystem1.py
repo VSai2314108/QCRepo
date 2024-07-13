@@ -51,7 +51,7 @@ class BullOrHedge(AlphaQM):
                         else:
                             if spy_cumret_5 < -6.0:
                                 if spxl_cumret_1 > 5.0 or spxl_rsi_10 > 31.0:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
                                 else:
                                     tickers_weights.append(("SPXL", 1))
                             else:
@@ -71,15 +71,15 @@ class BullOrHedge(AlphaQM):
                             else:
                                 if spxl_price_0 > spxl_ma_20:
                                     if sqqq_rsi_10 < 31.0:
-                                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
                                     else:
                                         tickers_weights.append(("SPXL", 1))
                                 else:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
         else:
             if spxu_rsi_10 < 31.0:
                 if spy_maxdrawdown_10 > 6.0 or tmf_maxdrawdown_10 > 7.0:
-                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
                 else:
                     if spy_price_0 > spy_ema_200:
                         if spxl_rsi_10 > 79.0:
@@ -87,7 +87,7 @@ class BullOrHedge(AlphaQM):
                         else:
                             if spy_cumret_5 < -6.0:
                                 if spxl_cumret_1 > 5.0 or spxl_rsi_10 > 31.0:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
                                 else:
                                     tickers_weights.append(("SPXL", 1))
                             else:
@@ -101,13 +101,13 @@ class BullOrHedge(AlphaQM):
                         else:
                             if uvxy_rsi_10 > 74.0:
                                 if uvxy_rsi_10 > 84.0:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
                                 else:
                                     tickers_weights.append(("UVXY", 1))
                             else:
                                 if spxl_price_0 > spxl_ma_20:
                                     if sqqq_rsi_10 < 31.0:
-                                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
                                     else:
                                         tickers_weights.append(("SPXL", 1))
                                 else:
