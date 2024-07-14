@@ -11,16 +11,16 @@ from utils.indicators.VolatilityQM import VolatilityQM
 # from main import ManagementAlgorithm
 
 # endregion
-class SVIX10(AlphaQM):
+class S11_9(AlphaQM):
     def __init__(self, customAlgo:QCAlgorithm) -> None:
         symbols = [
             "VIXY", "BND", "BIL", "QLD", "SVXY", "BTAL", "SPY", "GLD", "XLP", "SHY"
         ]
-        indicators = [(CumulativeReturnQM, 60), (VolatilityQM, 40)]
+        indicators = [(CumulativeReturnQM, 60), (VolatilityQM, 21)]
         AlphaQM.__init__(self, customAlgo, (14,4,10,-10), symbols, indicators)
 
     def calculate(self):
-        if self.customAlgo.indicators["VIXY"]["VolatilityQM_40"].temp_value < 5:
+        if self.customAlgo.indicators["SPY"]["VolatilityQM_21"].temp_value < 1.25:
             if self.customAlgo.indicators["BND"]["CumulativeReturnQM_60"].temp_value > self.customAlgo.indicators["BIL"]["CumulativeReturnQM_60"].temp_value:
                 return self.allocate([("QLD",1)])
             else:

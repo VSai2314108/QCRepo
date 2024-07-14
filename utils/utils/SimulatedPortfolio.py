@@ -2,13 +2,11 @@ from hmac import new
 from AlgorithmImports import *
 from datetime import timedelta, datetime
 
-from alphas.AlphaQM import AlphaQM
-
 class SimulatedPortfolio():
-    def __init__(self, alpha: AlphaQM, starting_value, lin_slope=False) -> None:
+    def __init__(self, alpha, starting_value, lin_slope=False) -> None:
         self.equity = starting_value
         self.cash = starting_value
-        self.alpha: AlphaQM = alpha
+        self.alpha = alpha
         self.algo: QCAlgorithm = alpha.customAlgo
         self.allocations = {symbol: (0,0,0) for symbol in self.alpha.symbols} # allocation, shares, last price
         self.pvalues = []

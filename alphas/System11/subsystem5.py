@@ -11,7 +11,7 @@ from utils.indicators.CumulativeReturnQM import CumulativeReturnQM
 
 # endregion
 
-class TreasuryBonds(AlphaQM):
+class S11_5(AlphaQM):
     def __init__(self, customAlgo:QCAlgorithm) -> None:
         symbols = [
             "TLT", "GLD", "TMF", "BTAL", "XLP", "UUP", "PSQ", "SH", "TMV"

@@ -9,7 +9,7 @@ from utils.indicators.CumulativeReturnQM import CumulativeReturnQM
 from utils.indicators.MaxDrawdownQM import MaxDrawdownQM
 # endregion
 
-class BlackSwanCatcher(AlphaQM):
+class S11_7(AlphaQM):
     def __init__(self, customAlgo:QCAlgorithm) -> None:
         symbols = [
             "SPY", "TQQQ", "UVXY", "QQQ", "TMF", "IEF", "TLT", "BND", "USDU", "GLD", "XLP"

@@ -10,7 +10,7 @@ from utils.indicators.VolatilityQM import VolatilityQM
 # from main import ManagementAlgorithm
 
 # endregion
-class SVIX10(AlphaQM):
+class S11_2(AlphaQM):
     def __init__(self, customAlgo:QCAlgorithm) -> None:
         symbols = [
             "TLT", "TMF", "SHY", "UUP", "GLD", "XLP"

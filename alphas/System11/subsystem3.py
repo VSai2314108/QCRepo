@@ -11,15 +11,18 @@ from utils.indicators.VolatilityQM import VolatilityQM
 # from main import ManagementAlgorithm
 
 # endregion
-class SVIX10(AlphaQM):
+class S11_3(AlphaQM):
     def __init__(self, customAlgo:QCAlgorithm) -> None:
         symbols = [
-            "IEI"
+            "SHV", "TLT", "HYG", "GLD", "UUP"
         ]
-        indicators = []
+        indicators = [(CumulativeReturnQM, 90), (CumulativeReturnQM, 120)]
         AlphaQM.__init__(self, customAlgo, (14,4,10,-10), symbols, indicators)
 
     def calculate(self):
-        return self.allocate([("IEI",1)])
+        indicators = ["CumulativeReturnQM"]
+        periods = [90, 120]
+        allocations = self.selection_helper(self.symbols, indicators, periods, mx=True, k_top=2)
+        return self.allocate(allocations)
         
         

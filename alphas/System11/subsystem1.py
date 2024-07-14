@@ -10,7 +10,7 @@ from utils.indicators.RelativeStrengthIndexQM import RelativeStrengthIndexQM
 # from main import ManagementAlgorithm
 
 # endregion
-class SVIX10(AlphaQM):
+class S11_1(AlphaQM):
     def __init__(self, customAlgo:QCAlgorithm) -> None:
         symbols = [
             "IEF", "TIP", "LQD", "HYG"

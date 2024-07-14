@@ -5,7 +5,7 @@ from utils.indicators.QMParent import QM
 from utils.utils.Charter import Charter
 
 class AlphaQM(AlphaModel):
-    def __init__(self, customAlgo: QCAlgorithm, slope_params, symbols, indicators, ignore_lin_slope=False) -> None:
+    def __init__(self, customAlgo: QCAlgorithm, slope_params, symbols, indicators, ignore_lin_slope=True) -> None:
         super().__init__()
         self.name = self.__class__.__name__
         self.customAlgo: QCAlgorithm = customAlgo
@@ -25,7 +25,7 @@ class AlphaQM(AlphaModel):
             self.allocations[key] = 0
         for pair in list_tuples:
             self.allocations[pair[0]] = self.allocations[pair[0]] + pair[1]
-        
+               
         ######### update sim port ##########
         self.sim_portfolio._update()
         self.lin_reg_slope.update(self.sim_portfolio.equity)

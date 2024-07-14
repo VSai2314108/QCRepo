@@ -5,26 +5,24 @@ from utils.utils.CustomConsolidators import ShorterDayConsolidator
 
 from utils.indicators.QMParent import QM
 
-from alphas.SVIX10 import SVIX10
-from alphas.NeoBetaBaller import NeoBetaBaller
 from alphas.AlphaQM import AlphaQM
+from alphas.System11 import subsystem1, subsystem2, subsystem3, subsystem4, subsystem5, subsystem6, subsystem7, subsystem8, subsystem9, subsystem10
 
 class ManagementAlgorithm(QCAlgorithm):
     def initialize(self):
         ############ SET BACKTEST PARAMETERS ##############
         self.starting_value = 100000
-        self.set_start_date(2022, 4, 20)  # Set Start Date
-        self.set_end_date(2024, 6, 20)    # Set End Date
+        self.set_start_date(2023, 7, 13)  # Set Start Date
+        self.set_end_date(2024, 7, 13)    # Set End Date
         self.set_cash(self.starting_value)  
         # self.set_brokerage_model(BrokerageName.DEFAULT, AccountType.CASH)
         
         ############# ADD ALPHA MODELS AND NECESSARY PARAMETERS ###############
 
         self.alpha_models: list[AlphaQM] = []
-        # self.alpha_models.append(SVIX10(self))
-        self.alpha_models.append(NeoBetaBaller(self, (14,14,5,-5)))
+        self.alpha_models.append(subsystem10.S11_10(self))
         self.insight_list: list[Insight] = []
-        self.weights: dict[str, float] = {"SVIX10": 0, "NeoBetaBaller": 1}
+        self.weights: dict[str, float] = {"S11_10": 1}
         
         ############ SET UNIVERSE OF SYMBOLS AND INDICATORS##############
         self.symbols = list(set([symbol for model in self.alpha_models for symbol in model.symbols]))

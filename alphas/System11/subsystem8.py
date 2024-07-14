@@ -10,7 +10,7 @@ from utils.indicators.MovingAverageQM import MovingAverageQM
 
 # endregion
 
-class TQQQ_FTLT(AlphaQM):
+class S11_8(AlphaQM):
     def __init__(self, customAlgo:QCAlgorithm) -> None:
         symbols = [
             "SPY", "TQQQ", "UVXY", "SQQQ", "BSV", "SPXL", "TECL"
