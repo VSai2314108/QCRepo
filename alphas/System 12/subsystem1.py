@@ -6,6 +6,7 @@ from utils.indicators.MaxDrawdownQM import MaxDrawdownQM
 from utils.indicators.CumulativeReturnQM import CumulativeReturnQM
 from utils.indicators.MovingAverageQM import MovingAverageQM
 from utils.indicators.ExponentialMovingAverageQM import ExponentialMovingAverageQM
+from utils.indicators.VolatilityQM import VolatilityQM
 
 class BullOrHedge(AlphaQM):
     def __init__(self, customAlgo: QCAlgorithm) -> None:
@@ -15,6 +16,7 @@ class BullOrHedge(AlphaQM):
             (RelativeStrengthIndexQM, 10), (MaxDrawdownQM, 10),
             (CumulativeReturnQM, 5), (CumulativeReturnQM, 1),
             (ExponentialMovingAverageQM, 200), (MovingAverageQM, 20),
+            (MovingAverageQM, 200), (VolatilityQM, 30)
         ]        
         AlphaQM.__init__(self, customAlgo, (14, 4, 10, -10), symbols, indicators, True)
         
@@ -43,7 +45,7 @@ class BullOrHedge(AlphaQM):
                 tickers_weights.append(("UVXY", 1))
             else:
                 if spy_maxdrawdown_10 > 6.0 or tmf_maxdrawdown_10 > 7.0:
-                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                    tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                 else:
                     if spy_price_0 > spy_ema_200:
                         if spxl_rsi_10 > 79.0:
@@ -51,7 +53,7 @@ class BullOrHedge(AlphaQM):
                         else:
                             if spy_cumret_5 < -6.0:
                                 if spxl_cumret_1 > 5.0 or spxl_rsi_10 > 31.0:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
+                                    tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                 else:
                                     tickers_weights.append(("SPXL", 1))
                             else:
@@ -65,21 +67,21 @@ class BullOrHedge(AlphaQM):
                         else:
                             if uvxy_rsi_10 > 74.0:
                                 if uvxy_rsi_10 > 84.0:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                    tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                 else:
                                     tickers_weights.append(("UVXY", 1))
                             else:
                                 if spxl_price_0 > spxl_ma_20:
                                     if sqqq_rsi_10 < 31.0:
-                                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
+                                        tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                     else:
                                         tickers_weights.append(("SPXL", 1))
                                 else:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
+                                    tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
         else:
             if spxu_rsi_10 < 31.0:
                 if spy_maxdrawdown_10 > 6.0 or tmf_maxdrawdown_10 > 7.0:
-                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
+                    tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                 else:
                     if spy_price_0 > spy_ema_200:
                         if spxl_rsi_10 > 79.0:
@@ -87,7 +89,7 @@ class BullOrHedge(AlphaQM):
                         else:
                             if spy_cumret_5 < -6.0:
                                 if spxl_cumret_1 > 5.0 or spxl_rsi_10 > 31.0:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
+                                    tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                 else:
                                     tickers_weights.append(("SPXL", 1))
                             else:
@@ -101,22 +103,22 @@ class BullOrHedge(AlphaQM):
                         else:
                             if uvxy_rsi_10 > 74.0:
                                 if uvxy_rsi_10 > 84.0:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
+                                    tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                 else:
                                     tickers_weights.append(("UVXY", 1))
                             else:
                                 if spxl_price_0 > spxl_ma_20:
                                     if sqqq_rsi_10 < 31.0:
-                                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)]) # allocation weight should be inverse volatility weighted using the volatility indicator
+                                        tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                     else:
                                         tickers_weights.append(("SPXL", 1))
                                 else:
-                                    tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                    tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
             else:
                 if uvxy_rsi_10 > 74.0:
                     if uvxy_rsi_10 > 84.0:
                         if spy_maxdrawdown_10 > 6.0 or tmf_maxdrawdown_10 > 7.0:
-                            tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                            tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                         else:
                             if spy_price_0 > spy_ema_200:
                                 if spxl_rsi_10 > 79.0:
@@ -124,7 +126,7 @@ class BullOrHedge(AlphaQM):
                                 else:
                                     if spy_cumret_5 < -6.0:
                                         if spxl_cumret_1 > 5.0 or spxl_rsi_10 > 31.0:
-                                            tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                            tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                         else:
                                             tickers_weights.append(("SPXL", 1))
                                     else:
@@ -138,22 +140,22 @@ class BullOrHedge(AlphaQM):
                                 else:
                                     if uvxy_rsi_10 > 74.0:
                                         if uvxy_rsi_10 > 84.0:
-                                            tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                            tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                         else:
                                             tickers_weights.append(("UVXY", 1))
                                     else:
                                         if spxl_price_0 > spxl_ma_20:
                                             if sqqq_rsi_10 < 31.0:
-                                                tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                                tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                             else:
                                                 tickers_weights.append(("SPXL", 1))
                                         else:
-                                            tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                            tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                     else:
                         tickers_weights.append(("UVXY", 1))
                 else:
                     if spy_maxdrawdown_10 > 6.0 or tmf_maxdrawdown_10 > 7.0:
-                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                        tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                     else:
                         if spy_price_0 > spy_ema_200:
                             if spxl_rsi_10 > 79.0:
@@ -161,7 +163,7 @@ class BullOrHedge(AlphaQM):
                             else:
                                 if spy_cumret_5 < -6.0:
                                     if spxl_cumret_1 > 5.0 or spxl_rsi_10 > 31.0:
-                                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                        tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                     else:
                                         tickers_weights.append(("SPXL", 1))
                                 else:
@@ -175,16 +177,27 @@ class BullOrHedge(AlphaQM):
                             else:
                                 if uvxy_rsi_10 > 74.0:
                                     if uvxy_rsi_10 > 84.0:
-                                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                        tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                     else:
                                         tickers_weights.append(("UVXY", 1))
                                 else:
                                     if spxl_price_0 > spxl_ma_20:
                                         if sqqq_rsi_10 < 31.0:
-                                            tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                            tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
                                         else:
                                             tickers_weights.append(("SPXL", 1))
                                     else:
-                                        tickers_weights.extend([("GLD", 0.5), ("UUP", 0.5)])
+                                        tickers_weights = self.inverse_volatility_allocation(["GLD", "UUP"])
 
         return self.allocate(tickers_weights)
+
+    def inverse_volatility_allocation(self, tickers):
+        volatilities = [self.customAlgo.indicators[ticker]["VolatilityQM_30"].temp_value for ticker in tickers]
+        inverse_volatilities = [1 / vol if vol != 0 else 0 for vol in volatilities]
+        total_inverse_volatility = sum(inverse_volatilities)
+        
+        if total_inverse_volatility == 0:
+            return [(ticker, 1 / len(tickers)) for ticker in tickers]
+        
+        weights = [inv_vol / total_inverse_volatility for inv_vol in inverse_volatilities]
+        return list(zip(tickers, weights))
