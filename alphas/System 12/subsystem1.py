@@ -15,7 +15,7 @@ class BullOrHedge(AlphaQM):
             (RelativeStrengthIndexQM, 10), (MaxDrawdownQM, 10),
             (CumulativeReturnQM, 5), (CumulativeReturnQM, 1),
             (ExponentialMovingAverageQM, 200), (MovingAverageQM, 20),
-            (MovingAverageQM, 200), (VolatilityQM, 30)
+            (MovingAverageQM, 200), (VolatilityQM, 20)
         ]        
         AlphaQM.__init__(self, customAlgo, (14, 4, 10, -10), symbols, indicators, True)
     
@@ -48,7 +48,7 @@ class BullOrHedge(AlphaQM):
         tmf_drawdown_10 = self.customAlgo.indicators["TMF"]["MaxDrawdownQM_10"].temp_value
         
         if spy_drawdown_10 > 6.0 or tmf_drawdown_10 > 7.0:
-            return self.allocate(self.inverse_volatility_allocation(["GLD", "UUP"]))
+            return self.allocate(self.inverse_volatility_weighted(["GLD", "UUP"]))
         else:
             return self.risk_on_strategy()
 
@@ -64,7 +64,7 @@ class BullOrHedge(AlphaQM):
                 if spy_return_5 < -6.0:
                     spxl_return_1 = self.customAlgo.indicators["SPXL"]["CumulativeReturnQM_1"].temp_value
                     if spxl_return_1 > 5.0 or spxl_rsi_10 > 31.0:
-                        return self.allocate(self.inverse_volatility_allocation(["GLD", "UUP"]))
+                        return self.allocate(self.inverse_volatility_weighted(["GLD", "UUP"]))
                     else:
                         return self.allocate([("SPXL", 1)])
                 else:
@@ -81,7 +81,7 @@ class BullOrHedge(AlphaQM):
                 uvxy_rsi_10 = self.customAlgo.indicators["UVXY"]["RelativeStrengthIndexQM_10"].temp_value
                 if uvxy_rsi_10 > 74.0:
                     if uvxy_rsi_10 > 84.0:
-                        return self.allocate(self.inverse_volatility_allocation(["GLD", "UUP"]))
+                        return self.allocate(self.inverse_volatility_weighted(["GLD", "UUP"]))
                     else:
                         return self.allocate([("UVXY", 1)])
                 else:
@@ -90,17 +90,13 @@ class BullOrHedge(AlphaQM):
                     if spxl_price_0 > spxl_ma_20:
                         sqqq_rsi_10 = self.customAlgo.indicators["SQQQ"]["RelativeStrengthIndexQM_10"].temp_value
                         if sqqq_rsi_10 < 31.0:
-                            return self.allocate(self.inverse_volatility_allocation(["GLD", "UUP"]))
+                            return self.allocate(self.inverse_volatility_weighted(["GLD", "UUP"]))
                         else:
                             return self.allocate([("SPXL", 1)])
                     else:
-                        return self.allocate(self.inverse_volatility_allocation(["GLD", "UUP"]))
+                        return self.allocate(self.inverse_volatility_weighted(["GLD", "UUP"]))
 
-    def inverse_volatility_allocation(self, tickers):
-        volatilities = [self.customAlgo.indicators[ticker]["VolatilityQM_30"].temp_value for ticker in tickers]
-        inverse_volatilities = [1 / vol if vol != 0 else 0 for vol in volatilities]
-        total_inverse_volatility = sum(inverse_volatilities)
-        if total_inverse_volatility == 0:
-            return [(ticker, 1 / len(tickers)) for ticker in tickers]
-        weights = [inv_vol / total_inverse_volatility for inv_vol in inverse_volatilities]
-        return list(zip(tickers, weights))
+    def inverse_volatility_weighted(self, tickers):
+        volatilities = [1 / self.customAlgo.indicators[ticker]["VolatilityQM_20"].temp_value for ticker in tickers]
+        total = sum(volatilities)
+        return [(ticker, vol / total) for ticker, vol in zip(tickers, volatilities)]
