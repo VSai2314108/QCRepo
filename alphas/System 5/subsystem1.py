@@ -18,7 +18,7 @@ class BullOnlyVsBearOnly(AlphaQM):
         indicators = [
             (RelativeStrengthIndexQM, 10), (RelativeStrengthIndexQM, 60),
             (MaxDrawdownQM, 10),
-            (MovingAverageQM, 15), (MovingAverageQM, 21), (MovingAverageQM, 50),
+            (MovingAverageQM, 15), (MovingAverageQM, 21), (MovingAverageQM, 50),    
             (MovingAverageQM, 110), (MovingAverageQM, 135), (MovingAverageQM, 200),
             (MovingAverageQM, 350), (MovingAverageQM, 550), (MovingAverageQM, 20),
             (ExponentialMovingAverageQM, 3), (ExponentialMovingAverageQM, 5),
