@@ -82,7 +82,7 @@ class UncorelatedBonds(AlphaQM):
         self.soxl_rsi10 = self.customAlgo.indicators["SOXL"]["RelativeStrengthIndexQM_10"].temp_value
         self.soxl_ma200 = self.customAlgo.indicators["SOXL"]["MovingAverageQM_200"].temp_value
         self.tecl_cr1 = self.customAlgo.indicators["TECL"]["CumulativeReturnQM_1"].temp_value
-        self.vixm_rsi10_window.Add(self.vixm_rsi10)
+        self.vixm_rsi10_window.add(self.vixm_rsi10)
 
         # Uncorrelated Bonds
         current_month = datetime.now().month

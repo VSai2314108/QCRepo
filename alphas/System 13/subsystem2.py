@@ -37,7 +37,7 @@ class VolatilityScaleIn(AlphaQM):
         self.upro_rsi10 = self.customAlgo.indicators['UPRO']['RelativeStrengthIndexQM_10'].temp_value
         self.vixm_price = self.customAlgo.indicators['VIXM']['tempBar'].close
         self.vixm_rsi10 = self.customAlgo.indicators['VIXM']['RelativeStrengthIndexQM_10'].temp_value
-        self.vixm_rsi10_window.Add(self.vixm_rsi10)
+        self.vixm_rsi10_window.add(self.vixm_rsi10)
 
         # Volmageddon I
         if self.svxy_md2 > 10.0:

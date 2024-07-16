@@ -9,7 +9,7 @@ from utils.indicators.VolatilityQM import VolatilityQM
 from datetime import datetime
 from collections import defaultdict
 
-class UncorrelatedBonds2(AlphaQM):
+class BullOrHedge(AlphaQM):
     def __init__(self, customAlgo: QCAlgorithm) -> None:
         # Indicators
         indicators = [
