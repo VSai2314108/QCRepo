@@ -76,7 +76,6 @@ class HedgedTrinityPop(AlphaQM):
                 combined_pop_bots.extend([(ticker, weight * (1/3)) for ticker, weight in allocation])
             
             # Combine allocations for the same ticker
-            from collections import defaultdict
             final_allocations = defaultdict(float)
             for ticker, weight in combined_pop_bots:
                 final_allocations[ticker] += weight
@@ -94,7 +93,6 @@ class HedgedTrinityPop(AlphaQM):
                 combined_pop_bots_BrianE.extend([(ticker, weight * (1/3)) for ticker, weight in allocation])
             
             # Combine allocations for the same ticker
-            from collections import defaultdict
             final_allocations_BrianE = defaultdict(float)
             for ticker, weight in combined_pop_bots_BrianE:
                 final_allocations_BrianE[ticker] += weight
