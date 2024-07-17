@@ -30,11 +30,14 @@ class IncantationParser:
                 if key in incantation:
                     indicator = incantation[key]
                     indicator_type = indicator["type"]
-                    symbol = incantation.get("lh_ticker_symbol") or incantation.get("rh_ticker_symbol")
+                    symbol = incantation.get("lh_ticker_symbol")
+                    symbol2 = incantation.get("rh_ticker_symbol")
                     window = indicator.get("window", 0)
                     
                     if symbol:
                         symbols.add(symbol)
+                    if symbol2:
+                        symbols.add(symbol2)
                     
                     if indicator_type != "CurrentPrice":
                         if window != 0:
