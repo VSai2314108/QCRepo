@@ -7,19 +7,70 @@ from utils.indicators.CumulativeReturnQM import CumulativeReturnQM
 from utils.indicators.MovingAverageQM import MovingAverageQM
 from utils.indicators.VolatilityQM import VolatilityQM
 from datetime import datetime
+from collections import defaultdict
 
 class BullOrHedge(AlphaQM):
     def __init__(self, customAlgo: QCAlgorithm) -> None:
+        
+        # Symbols
         symbols = [
-            "SPY", "IEF", "BIL", "SVXY", "TQQQ", "TECL", "UPRO", "SQQQ", "SOXS", "TECS", "UVXY", "TLT", "BND", "PSQ", "QQQ", "VIXY", "SHY", "GLD", "XLP", "BTAL", "SHV", "TMF", "VIXM", "SOXL", "TMV"
+            'BIL',
+            'BND',
+            'BTAL',
+            'GLD',
+            'IEF',
+            'PSQ',
+            'QQQ',
+            'SHV',
+            'SHY',
+            'SOXL',
+            'SOXS',
+            'SPY',
+            'SQQQ',
+            'SVXY',
+            'TECL',
+            'TECS',
+            'TLT',
+            'TMF',
+            'TMV',
+            'TQQQ',
+            'UPRO',
+            'UVXY',
+            'VIXM',
+            'VIXY',
+            'XLP',
         ]
+
+        # Indicators
         indicators = [
-            (MovingAverageQM, 10), (MovingAverageQM, 40), (MovingAverageQM, 100), (MovingAverageQM, 200),
-            (MaxDrawdownQM, 2), (MaxDrawdownQM, 3), (MaxDrawdownQM, 10),
-            (RelativeStrengthIndexQM, 5), (RelativeStrengthIndexQM, 10), (RelativeStrengthIndexQM, 50), (RelativeStrengthIndexQM, 60),
-            (VolatilityQM, 5), (VolatilityQM, 10), (VolatilityQM, 40),
-            (CumulativeReturnQM, 1), (CumulativeReturnQM, 6), (CumulativeReturnQM, 60), (CumulativeReturnQM, 100)
+            (CumulativeReturnQM, 1),
+            (CumulativeReturnQM, 6),
+            (CumulativeReturnQM, 60),
+            (CumulativeReturnQM, 100),
+            (MaxDrawdownQM, 2),
+            (MaxDrawdownQM, 3),
+            (MaxDrawdownQM, 10),
+            (MaxDrawdownQM, 60),
+            (MovingAverageQM, 10),
+            (MovingAverageQM, 25),
+            (MovingAverageQM, 40),
+            (MovingAverageQM, 100),
+            (MovingAverageQM, 200),
+            (RelativeStrengthIndexQM, 5),
+            (RelativeStrengthIndexQM, 10),
+            (RelativeStrengthIndexQM, 20),
+            (RelativeStrengthIndexQM, 45),
+            (RelativeStrengthIndexQM, 60),
+            (RelativeStrengthIndexQM, 200),
+            (VolatilityQM, 2),
+            (VolatilityQM, 3),
+            (VolatilityQM, 5),
+            (VolatilityQM, 10),
+            (VolatilityQM, 21),
+            (VolatilityQM, 40),
+            (VolatilityQM, 45),
         ]
+
         self.vixm_rsi10_window = RollingWindow[float](5)
         self.tmf_md60_window = RollingWindow[float](10)
         self.tmv_ma10_window = RollingWindow[float](10)
@@ -29,131 +80,20 @@ class BullOrHedge(AlphaQM):
         AlphaQM.__init__(self, customAlgo, (14, 4, 10, -10), symbols, indicators, True)
 
     def calculate(self):
-        # Indicator and price declarations
-        self.bil_cr100 = self.customAlgo.indicators['BIL']['CumulativeReturnQM_100'].temp_value
-        self.bil_price = self.customAlgo.indicators['BIL']['tempBar'].close
-        self.bnd_cr60 = self.customAlgo.indicators['BND']['CumulativeReturnQM_60'].temp_value
-        self.bnd_price = self.customAlgo.indicators['BND']['tempBar'].close
-        self.bnd_rsi45 = self.customAlgo.indicators['BND']['RelativeStrengthIndexQM_45'].temp_value
-        self.ief_price = self.customAlgo.indicators['IEF']['tempBar'].close
-        self.ief_rsi10 = self.customAlgo.indicators['IEF']['RelativeStrengthIndexQM_10'].temp_value
-        self.ief_rsi20 = self.customAlgo.indicators['IEF']['RelativeStrengthIndexQM_20'].temp_value
-        self.ief_rsi200 = self.customAlgo.indicators['IEF']['RelativeStrengthIndexQM_200'].temp_value
-        self.qqq_ma25 = self.customAlgo.indicators['QQQ']['MovingAverageQM_25'].temp_value
-        self.qqq_md10 = self.customAlgo.indicators['QQQ']['MaxDrawdownQM_10'].temp_value
-        self.qqq_price = self.customAlgo.indicators['QQQ']['tempBar'].close
-        self.qqq_rsi10 = self.customAlgo.indicators['QQQ']['RelativeStrengthIndexQM_10'].temp_value
-        self.qqq_v10 = self.customAlgo.indicators['QQQ']['VolatilityQM_10'].temp_value
-        self.soxl_cr1 = self.customAlgo.indicators['SOXL']['CumulativeReturnQM_1'].temp_value
-        self.soxl_ma200 = self.customAlgo.indicators['SOXL']['MovingAverageQM_200'].temp_value
-        self.soxl_price = self.customAlgo.indicators['SOXL']['tempBar'].close
-        self.soxl_rsi10 = self.customAlgo.indicators['SOXL']['RelativeStrengthIndexQM_10'].temp_value
-        self.spy_ma200 = self.customAlgo.indicators['SPY']['MovingAverageQM_200'].temp_value
-        self.spy_rsi45 = self.customAlgo.indicators['SPY']['RelativeStrengthIndexQM_45'].temp_value
-        self.spy_price = self.customAlgo.indicators['SPY']['tempBar'].close
-        self.spy_rsi5 = self.customAlgo.indicators['SPY']['RelativeStrengthIndexQM_5'].temp_value
-        self.spy_rsi60 = self.customAlgo.indicators['SPY']['RelativeStrengthIndexQM_60'].temp_value
-        self.spy_v10 = self.customAlgo.indicators['SPY']['VolatilityQM_10'].temp_value
-        self.spy_v21 = self.customAlgo.indicators['SPY']['VolatilityQM_21'].temp_value
-        self.spy_v5 = self.customAlgo.indicators['SPY']['VolatilityQM_5'].temp_value
-        self.svxy_cr1 = self.customAlgo.indicators['SVXY']['CumulativeReturnQM_1'].temp_value
-        self.svxy_ma200 = self.customAlgo.indicators['SVXY']['MovingAverageQM_200'].temp_value
-        self.svxy_md2 = self.customAlgo.indicators['SVXY']['MaxDrawdownQM_2'].temp_value
-        self.svxy_md3 = self.customAlgo.indicators['SVXY']['MaxDrawdownQM_3'].temp_value
-        self.svxy_price = self.customAlgo.indicators['SVXY']['tempBar'].close
-        self.svxy_rsi10 = self.customAlgo.indicators['SVXY']['RelativeStrengthIndexQM_10'].temp_value
-        self.svxy_v2 = self.customAlgo.indicators['SVXY']['VolatilityQM_2'].temp_value
-        self.svxy_v3 = self.customAlgo.indicators['SVXY']['VolatilityQM_3'].temp_value
-        self.tecl_cr1 = self.customAlgo.indicators['TECL']['CumulativeReturnQM_1'].temp_value
-        self.tecl_ma200 = self.customAlgo.indicators['TECL']['MovingAverageQM_200'].temp_value
-        self.tecl_price = self.customAlgo.indicators['TECL']['tempBar'].close
-        self.tecl_rsi10 = self.customAlgo.indicators['TECL']['RelativeStrengthIndexQM_10'].temp_value
-        self.tlt_ma15 = self.customAlgo.indicators['TLT']['MovingAverageQM_15'].temp_value
-        self.tlt_ma50 = self.customAlgo.indicators['TLT']['MovingAverageQM_50'].temp_value
-        self.tlt_md10 = self.customAlgo.indicators['TLT']['MaxDrawdownQM_10'].temp_value
-        self.tlt_price = self.customAlgo.indicators['TLT']['tempBar'].close
-        self.tmf_md10 = self.customAlgo.indicators['TMF']['MaxDrawdownQM_10'].temp_value
-        self.tmf_md60 = self.customAlgo.indicators['TMF']['MaxDrawdownQM_60'].temp_value
-        self.tmf_price = self.customAlgo.indicators['TMF']['tempBar'].close
-        self.tqqq_cr1 = self.customAlgo.indicators['TQQQ']['CumulativeReturnQM_1'].temp_value
-        self.tqqq_cr6 = self.customAlgo.indicators['TQQQ']['CumulativeReturnQM_6'].temp_value
-        self.tqqq_ma200 = self.customAlgo.indicators['TQQQ']['MovingAverageQM_200'].temp_value
-        self.tqqq_price = self.customAlgo.indicators['TQQQ']['tempBar'].close
-        self.tqqq_rsi10 = self.customAlgo.indicators['TQQQ']['RelativeStrengthIndexQM_10'].temp_value
-        self.upro_cr1 = self.customAlgo.indicators['UPRO']['CumulativeReturnQM_1'].temp_value
-        self.upro_ma200 = self.customAlgo.indicators['UPRO']['MovingAverageQM_200'].temp_value
-        self.upro_price = self.customAlgo.indicators['UPRO']['tempBar'].close
-        self.upro_rsi10 = self.customAlgo.indicators['UPRO']['RelativeStrengthIndexQM_10'].temp_value
-        self.vixm_price = self.customAlgo.indicators['VIXM']['tempBar'].close
-        self.vixm_rsi10 = self.customAlgo.indicators['VIXM']['RelativeStrengthIndexQM_10'].temp_value
-        self.vixy_price = self.customAlgo.indicators['VIXY']['tempBar'].close
-        self.vixy_v40 = self.customAlgo.indicators['VIXY']['VolatilityQM_40'].temp_value
-        self.tlt_rsi200 = self.customAlgo.indicators['TLT']['RelativeStrengthIndexQM_200'].temp_value
-        self.psq_rsi20 = self.customAlgo.indicators['PSQ']['RelativeStrengthIndexQM_20'].temp_value
-        self.tlt_cr100 = self.customAlgo.indicators['TLT']['CumulativeReturnQM_100'].temp_value
-        self.bil_cr60 = self.customAlgo.indicators['BIL']['CumulativeReturnQM_60'].temp_value
+        import re
+        for symbol in self.symbols:
+            # Assign price for each symbol
+            exec(f"self.{symbol.lower()}_price = self.customAlgo.indicators['{symbol}']['tempBar'].close")
+            for indicator_name, indicator_obj in self.customAlgo.indicators[symbol].items():
+                if indicator_name != 'tempBar':
+                    abbr = ''.join(word[0].lower() for word in re.findall(r'[A-Z][^A-Z]*', indicator_name.split('_')[0]))
+                    window = indicator_name.split('_')[-1]
+                    var_name = f"{symbol.lower()}_{abbr[:-2]}{window}"
+                    try:
+                        exec(f"self.{var_name} = self.customAlgo.indicators['{symbol}']['{indicator_name}'].temp_value")
+                    except:
+                        pass
         
-        
-        self.bil_cr100 = self.customAlgo.indicators['BIL']['CumulativeReturnQM_100'].temp_value
-        self.bil_price = self.customAlgo.indicators['BIL']['tempBar'].close
-        self.bnd_cr60 = self.customAlgo.indicators['BND']['CumulativeReturnQM_60'].temp_value
-        self.bnd_price = self.customAlgo.indicators['BND']['tempBar'].close
-        self.bnd_rsi45 = self.customAlgo.indicators['BND']['RelativeStrengthIndexQM_45'].temp_value
-        self.ief_price = self.customAlgo.indicators['IEF']['tempBar'].close
-        self.ief_rsi10 = self.customAlgo.indicators['IEF']['RelativeStrengthIndexQM_10'].temp_value
-        self.ief_rsi20 = self.customAlgo.indicators['IEF']['RelativeStrengthIndexQM_20'].temp_value
-        self.ief_rsi200 = self.customAlgo.indicators['IEF']['RelativeStrengthIndexQM_200'].temp_value
-        self.qqq_ma25 = self.customAlgo.indicators['QQQ']['MovingAverageQM_25'].temp_value
-        self.qqq_md10 = self.customAlgo.indicators['QQQ']['MaxDrawdownQM_10'].temp_value
-        self.qqq_price = self.customAlgo.indicators['QQQ']['tempBar'].close
-        self.qqq_rsi10 = self.customAlgo.indicators['QQQ']['RelativeStrengthIndexQM_10'].temp_value
-        self.qqq_v10 = self.customAlgo.indicators['QQQ']['VolatilityQM_10'].temp_value
-        self.soxl_cr1 = self.customAlgo.indicators['SOXL']['CumulativeReturnQM_1'].temp_value
-        self.soxl_ma200 = self.customAlgo.indicators['SOXL']['MovingAverageQM_200'].temp_value
-        self.soxl_price = self.customAlgo.indicators['SOXL']['tempBar'].close
-        self.soxl_rsi10 = self.customAlgo.indicators['SOXL']['RelativeStrengthIndexQM_10'].temp_value
-        self.spy_ma200 = self.customAlgo.indicators['SPY']['MovingAverageQM_200'].temp_value
-        self.spy_price = self.customAlgo.indicators['SPY']['tempBar'].close
-        self.spy_rsi5 = self.customAlgo.indicators['SPY']['RelativeStrengthIndexQM_5'].temp_value
-        self.spy_rsi60 = self.customAlgo.indicators['SPY']['RelativeStrengthIndexQM_60'].temp_value
-        self.spy_v10 = self.customAlgo.indicators['SPY']['VolatilityQM_10'].temp_value
-        self.spy_v21 = self.customAlgo.indicators['SPY']['VolatilityQM_21'].temp_value
-        self.spy_v5 = self.customAlgo.indicators['SPY']['VolatilityQM_5'].temp_value
-        self.svxy_cr1 = self.customAlgo.indicators['SVXY']['CumulativeReturnQM_1'].temp_value
-        self.svxy_ma200 = self.customAlgo.indicators['SVXY']['MovingAverageQM_200'].temp_value
-        self.svxy_md2 = self.customAlgo.indicators['SVXY']['MaxDrawdownQM_2'].temp_value
-        self.svxy_md3 = self.customAlgo.indicators['SVXY']['MaxDrawdownQM_3'].temp_value
-        self.svxy_price = self.customAlgo.indicators['SVXY']['tempBar'].close
-        self.svxy_rsi10 = self.customAlgo.indicators['SVXY']['RelativeStrengthIndexQM_10'].temp_value
-        self.svxy_v2 = self.customAlgo.indicators['SVXY']['VolatilityQM_2'].temp_value
-        self.svxy_v3 = self.customAlgo.indicators['SVXY']['VolatilityQM_3'].temp_value
-        self.tecl_cr1 = self.customAlgo.indicators['TECL']['CumulativeReturnQM_1'].temp_value
-        self.tecl_ma200 = self.customAlgo.indicators['TECL']['MovingAverageQM_200'].temp_value
-        self.tecl_price = self.customAlgo.indicators['TECL']['tempBar'].close
-        self.tecl_rsi10 = self.customAlgo.indicators['TECL']['RelativeStrengthIndexQM_10'].temp_value
-        self.tlt_md10 = self.customAlgo.indicators['TLT']['MaxDrawdownQM_10'].temp_value
-        self.tlt_price = self.customAlgo.indicators['TLT']['tempBar'].close
-        self.tmf_md10 = self.customAlgo.indicators['TMF']['MaxDrawdownQM_10'].temp_value
-        self.tmf_price = self.customAlgo.indicators['TMF']['tempBar'].close
-        self.tmv_cp15 = self.customAlgo.indicators['TMV']['CurrentPriceQM_15'].temp_value
-        self.tmv_ma10 = self.customAlgo.indicators['TMV']['MovingAverageQM_10'].temp_value
-        self.tmv_ma100 = self.customAlgo.indicators['TMV']['MovingAverageQM_100'].temp_value
-        self.tmv_ma40 = self.customAlgo.indicators['TMV']['MovingAverageQM_40'].temp_value
-        self.tmv_price = self.customAlgo.indicators['TMV']['tempBar'].close
-        self.tqqq_cr1 = self.customAlgo.indicators['TQQQ']['CumulativeReturnQM_1'].temp_value
-        self.tqqq_cr6 = self.customAlgo.indicators['TQQQ']['CumulativeReturnQM_6'].temp_value
-        self.tqqq_ma200 = self.customAlgo.indicators['TQQQ']['MovingAverageQM_200'].temp_value
-        self.tqqq_price = self.customAlgo.indicators['TQQQ']['tempBar'].close
-        self.tqqq_rsi10 = self.customAlgo.indicators['TQQQ']['RelativeStrengthIndexQM_10'].temp_value
-        self.upro_cr1 = self.customAlgo.indicators['UPRO']['CumulativeReturnQM_1'].temp_value
-        self.upro_ma200 = self.customAlgo.indicators['UPRO']['MovingAverageQM_200'].temp_value
-        self.upro_price = self.customAlgo.indicators['UPRO']['tempBar'].close
-        self.upro_rsi10 = self.customAlgo.indicators['UPRO']['RelativeStrengthIndexQM_10'].temp_value
-        self.vixm_price = self.customAlgo.indicators['VIXM']['tempBar'].close
-        self.vixm_rsi10 = self.customAlgo.indicators['VIXM']['RelativeStrengthIndexQM_10'].temp_value
-        self.vixy_price = self.customAlgo.indicators['VIXY']['tempBar'].close
-        self.vixy_v40 = self.customAlgo.indicators['VIXY']['VolatilityQM_40'].temp_value
-
         self.tmf_md60_window.add(self.tmf_md60)
         self.vixm_rsi10_window.add(self.vixm_rsi10)
         self.tmv_price_window.add(self.tmv_price)
